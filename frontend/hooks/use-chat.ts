@@ -37,7 +37,9 @@ interface ChatSession {
   pendingGsdRequest?: {
     question: string;
     image: File;
+    query_type: string;
   };
+
 
   lastImage?: File | null;      // session-specific
   lastPreview?: string | null;  // session-specific
@@ -277,42 +279,39 @@ async function drawOrientedBoxesJS(imageUrl: string, boxes: any[]) {
       // --------------------------------------------------
 // USER IS PROVIDING GSD NUMBER
 // --------------------------------------------------
-if (
-  currentSession?.pendingGsdRequest &&
-  !attachments?.length &&
-  !isNaN(Number(content))
-) {
+if (currentSession?.pendingGsdRequest &&
+    !attachments?.length &&
+    !isNaN(Number(content))) {
+    
     const gsdValue = Number(content);
-    const { question, image } = currentSession.pendingGsdRequest;
+    const { question, image, query_type } = currentSession.pendingGsdRequest;
 
-    // remove pendingGsdRequest
     setCurrentSession(prev => {
-      if (!prev) return prev;
-      const updated = { ...prev };
-      delete updated.pendingGsdRequest;
-      setSessions(s => s.map(x => x.id === updated.id ? updated : x));
-      return updated;
+        if (!prev) return prev;
+        const updated = { ...prev };
+        delete updated.pendingGsdRequest;
+        setSessions(s => s.map(x => x.id === updated.id ? updated : x));
+        return updated;
     });
 
-    // send new request with GSD
     const formData = new FormData();
     formData.append("image", image);
     formData.append("question", question);
-    formData.append("query_type", "auto");
+    formData.append("query_type", query_type);
     formData.append("gsd", String(gsdValue));
 
     const response = await fetch("/api/proxy", {
-      method: "POST",
-      body: formData,
+        method: "POST",
+        body: formData,
     });
 
-    const result = await response.json();
+    const finalResult = await response.json();
 
-    // Continue with your normal backend logic
-    await handleNormalBackendResult(result, currentSession);
+    await handleNormalBackendResult(finalResult, currentSession);
 
     return;
 }
+
 
 
       const userMessage: Message = {
@@ -425,10 +424,12 @@ else {
     if (!prev) return prev;
     const updated = {
       ...prev,
-      pendingGsdRequest: {
-        question: content,
-        image: imageFileToSend!, 
-      }
+     pendingGsdRequest: {
+    question: content,
+    image: imageFileToSend!,
+    query_type: "auto",
+    }
+
     };
     setSessions(s => s.map(x => x.id === updated.id ? updated : x));
     return updated;
