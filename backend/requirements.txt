@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+aiohttp
+rasterio
+
+pillow
+ # pinned to compatible version with CUDA on DGX
+gunicorn
+python-multipart
+torch
+torchvision
+transformers
+sentencepiece
+accelerate
+timm
+einops

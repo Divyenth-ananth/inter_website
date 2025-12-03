@@ -1,0 +1,29 @@
+{
+  "input_image": {
+    "image_id": "img1",
+    "image_url": null,
+    "metadata": {
+      "width": 512,
+      "height": 512
+    }
+  },
+  "queries": {
+    "caption_query": {
+      "instruction": "Describe scene"
+    },
+    "grounding_query": {
+      "instruction": "Locate buildings"
+    },
+    "attribute_query": {
+      "binary": {
+        "instruction": "Is there a car?"
+      },
+      "numeric": {
+        "instruction": "How many tanks?"
+      },
+      "semantic": {
+        "instruction": "Roof color?"
+      }
+    }
+  }
+}
