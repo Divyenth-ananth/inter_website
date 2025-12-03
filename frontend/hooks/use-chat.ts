@@ -458,7 +458,7 @@ else {
 
 
         console.log("Backend response:", result);
-        alert(JSON.stringify(result, null, 2));
+        // alert(JSON.stringify(result, null, 2));
 
       let groundingBoxes: any[] = [];
 
